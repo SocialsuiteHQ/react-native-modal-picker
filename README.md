@@ -1,6 +1,4 @@
-[![npm version](https://badge.fury.io/js/react-native-modal-picker.svg)](https://badge.fury.io/js/react-native-modal-picker)
-
-# react-native-modal-picker
+# react-native-modal-selector
 A cross-platform (iOS / Android), selector/picker component for React Native that is highly customizable and supports sections.
 
 ## Demo
@@ -10,7 +8,7 @@ A cross-platform (iOS / Android), selector/picker component for React Native tha
 ## Install
 
 ```sh
-npm i react-native-modal-picker --save
+npm i react-native-modal-selector --save
 ```
 
 ## Usage
@@ -21,7 +19,7 @@ See `SampleApp` for an example how to use this component.
 
 ```jsx
 
-import ModalPicker from 'react-native-modal-picker'
+import ModalSelector from 'react-native-modal-selector'
 
 [..]
 
@@ -58,23 +56,23 @@ class SampleApp extends Component {
         return (
             <View style={{flex:1, justifyContent:'space-around', padding:50}}>
 
-                <ModalPicker
+                <ModalSelector
                     data={data}
                     initValue="Select something yummy!"
                     onChange={(option)=>{ alert(`${option.label} (${option.key}) nom nom nom`) }} />
 
-                <ModalPicker
+                <ModalSelector
                     data={data}
                     initValue="Select something yummy!"
                     onChange={(option)=>{ this.setState({textInputValue:option.label})}}>
-                    
+
                     <TextInput
                         style={{borderWidth:1, borderColor:'#ccc', padding:10, height:30}}
                         editable={false}
                         placeholder="Select something yummy!"
                         value={this.state.textInputValue} />
-                        
-                </ModalPicker>
+
+                </ModalSelector>
             </View>
         );
     }
@@ -83,17 +81,19 @@ class SampleApp extends Component {
 
 ## Props
 
-* `data - []` required, array of objects with a unique key and label
-* `style - object` optional, style definitions for the root element
-* `onChange - function` optional, callback function, when the users has selected an option
-* `initValue - string` optional, text that is initially shown on the button
-* `cancelText - string` optional, text of the cancel button
-* `selectStyle - object` optional, style definitions for the select element (available in default mode only!)
-* `selectTextStyle - object` optional, style definitions for the select element (available in default mode only!)
-* `overlayStyle - object` optional, style definitions for the overly/background element
-* `sectionStyle - object` optional, style definitions for the section element
-* `sectionTextStyle - object` optional, style definitions for the select text element
-* `optionStyle - object` optional, style definitions for the option element
-* `optionTextStyle - object` optional, style definitions for the option text element
-* `cancelStyle - object` optional, style definitions for the cancel element
-* `cancelTextStyle - object` optional, style definitions for the cancel text element
+*   `data` (array, required) array of objects with a unique key and label
+*   `style` (object, optional) style definitions for the root element
+*   `onChange` (function, optional) callback function, when the users has selected an option
+*   `initValue` (string, optional) text that is initially shown on the button
+*   `cancelText` (string, optional) text of the cancel button
+*   `selectStyle` (object, optional) style definitions for the select element (available in default mode only!).
+NOTE: Due to breaking changes in React Native, RN < 0.39.0 should pass `flex:1` explicitly to `selectStyle` as a prop.
+*   `selectTextStyle` (object, optional) style definitions for the select element (available in default mode only!)
+*   `overlayStyle` (object, optional) style definitions for the overly/background element
+*   `sectionStyle` (object, optional) style definitions for the section element
+*   `sectionTextStyle` (object, optional) style definitions for the select text element
+*   `optionStyle` (object, optional) style definitions for the option element
+*   `optionTextStyle` (object, optional) style definitions for the option text element
+*   `cancelStyle` (object, optional) style definitions for the cancel element
+*   `cancelTextStyle` (object, optional) style definitions for the cancel text element
+*   `keyboardShouldPersistTaps` (string/bool, optional, default 'always') passed to underlying ScrollView

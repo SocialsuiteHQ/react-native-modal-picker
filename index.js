@@ -1,8 +1,7 @@
 'use strict';
 
-import React,{
-    PropTypes
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
     View,
@@ -12,30 +11,33 @@ import {
     Text,
     ScrollView,
     TouchableOpacity,
-    Platform
+    Platform,
+    ViewPropTypes
 } from 'react-native';
 
 import styles from './style';
 import BaseComponent from './BaseComponent';
 
 let componentIndex = 0;
+let rnVersion = Number.parseFloat(require('react-native/package.json').version);
 
 const propTypes = {
     data: PropTypes.array,
     onChange: PropTypes.func,
     initValue: PropTypes.string,
-    style: View.propTypes.style,
-    selectStyle: View.propTypes.style,
-    optionStyle: View.propTypes.style,
+    style: rnVersion >= 0.44 ? ViewPropTypes.style : View.propTypes.style,
+    selectStyle: rnVersion >= 0.44 ? ViewPropTypes.style : View.propTypes.style,
+    optionStyle: rnVersion >= 0.44 ? ViewPropTypes.style : View.propTypes.style,
     optionTextStyle: Text.propTypes.style,
-    sectionStyle: View.propTypes.style,
+    sectionStyle: rnVersion >= 0.44 ? ViewPropTypes.style : View.propTypes.style,
     sectionTextStyle: Text.propTypes.style,
-    cancelStyle: View.propTypes.style,
+    cancelStyle: rnVersion >= 0.44 ? ViewPropTypes.style : View.propTypes.style,
     cancelTextStyle: Text.propTypes.style,
-    overlayStyle: View.propTypes.style,
     optionContainerStyle: View.propTypes.style,
     cancelContainerStyle: View.propTypes.style,
-    cancelText: PropTypes.string
+    overlayStyle: rnVersion >= 0.44 ? ViewPropTypes.style : View.propTypes.style,
+    cancelText: PropTypes.string,
+    keyboardShouldPersistTaps: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
 
 const defaultProps = {
@@ -51,10 +53,11 @@ const defaultProps = {
     cancelStyle: {},
     cancelTextStyle: {},
     overlayStyle: {},
-    cancelText: 'cancel'
+    cancelText: 'cancel',
+    keyboardShouldPersistTaps: 'always'
 };
 
-export default class ModalPicker extends BaseComponent {
+export default class ModalSelector extends BaseComponent {
 
     constructor() {
 
@@ -133,7 +136,7 @@ export default class ModalPicker extends BaseComponent {
         return (
             <View style={[styles.overlayStyle, this.props.overlayStyle]} key={'modalPicker'+(componentIndex++)}>
                 <View style={[styles.optionContainer, this.props.optionContainerStyle]}>
-                    <ScrollView keyboardShouldPersistTaps='always'>
+                    <ScrollView keyboardShouldPersistTaps={this.props.keyboardShouldPersistTaps}>
                         <View style={{paddingHorizontal:10}}>
                             {options}
                         </View>
@@ -181,5 +184,5 @@ export default class ModalPicker extends BaseComponent {
     }
 }
 
-ModalPicker.propTypes = propTypes;
-ModalPicker.defaultProps = defaultProps;
+ModalSelector.propTypes = propTypes;
+ModalSelector.defaultProps = defaultProps;
