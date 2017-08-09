@@ -21,14 +21,10 @@ export default StyleSheet.create({
 
     optionContainer: {
         borderRadius:BORDER_RADIUS,
-        flexShrink: 1,
-        marginBottom: 8,
-        padding: PADDING,
         backgroundColor:'rgba(255,255,255,0.8)',
     },
 
     cancelContainer: {
-      alignSelf: 'center'
     },
 
     selectStyle: {
