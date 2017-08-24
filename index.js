@@ -5,14 +5,12 @@ import PropTypes from 'prop-types';
 
 import {
     View,
-    StyleSheet,
-    Dimensions,
     Modal,
     Text,
     ScrollView,
     TouchableOpacity,
-    Platform,
-    ViewPropTypes
+    ViewPropTypes,
+    Dimensions
 } from 'react-native';
 
 import styles from './style';
@@ -20,6 +18,8 @@ import BaseComponent from './BaseComponent';
 
 let componentIndex = 0;
 let rnVersion = Number.parseFloat(require('react-native/package.json').version);
+let { height } = Dimensions.get('window');
+
 
 const propTypes = {
     data: PropTypes.array,
@@ -73,19 +73,19 @@ export default class ModalSelector extends BaseComponent {
             animationType: 'slide',
             modalVisible: false,
             transparent: false,
-            selected: 'please select'
+            selected: 'please select',
+            height: 0,
         };
     }
 
     componentDidMount() {
-        this.setState({selected: this.props.initValue});
-        this.setState({cancelText: this.props.cancelText});
+        this.setState({selected: this.props.initValue, cancelText: this.props.cancelText});
     }
 
     componentWillReceiveProps(nextProps) {
-      if (nextProps.initValue != this.props.initValue) {
-        this.setState({selected: nextProps.initValue});
-      }
+        if (nextProps.initValue != this.props.initValue) {
+            this.setState({selected: nextProps.initValue});
+        }
     }
 
     onChange(item) {
@@ -95,15 +95,15 @@ export default class ModalSelector extends BaseComponent {
     }
 
     close() {
-      this.setState({
-        modalVisible: false
-      });
+        this.setState({
+            modalVisible: false
+        });
     }
 
     open() {
-      this.setState({
-        modalVisible: true
-      });
+        this.setState({
+            modalVisible: true
+        });
     }
 
     renderSection(section) {
@@ -114,13 +114,22 @@ export default class ModalSelector extends BaseComponent {
         );
     }
 
+    setRenderHeight(event) {
+        var height = event.nativeEvent.layout.height
+
+        if(this.state.height !== height) {
+            this.setState({height: height});
+        }
+    }
+
     renderOption(option) {
         return (
-            <TouchableOpacity key={option.key} onPress={()=>this.onChange(option)}>
+            <TouchableOpacity key={option.key} onPress={()=>this.onChange(option)} onLayout={event => this.setRenderHeight(event)}>
                 <View style={[styles.optionStyle, this.props.optionStyle]}>
                     <Text style={[styles.optionTextStyle,this.props.optionTextStyle]}>{option.label}</Text>
                 </View>
-            </TouchableOpacity>)
+            </TouchableOpacity>
+        )
     }
 
     renderOptionList() {
@@ -132,12 +141,13 @@ export default class ModalSelector extends BaseComponent {
             }
         });
 
-
+        //Set the max scroll view height to take up 50% of the screen height
+        var optionsMaxHeight = Math.min(this.state.height * this.props.data.length, ((height / this.state.height * 0.5) | 0) * this.state.height);
 
         return (
             <View style={[styles.overlayStyle, this.props.overlayStyle]} key={'modalPicker'+(componentIndex++)}>
                 <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
-                    <View style={[styles.optionContainer, this.props.optionContainerStyle]}>
+                    <View style={[styles.optionContainer, {maxHeight: optionsMaxHeight}, this.props.optionContainerStyle]}>
                         <ScrollView keyboardShouldPersistTaps='always'>
                             {options}
                         </ScrollView>
@@ -150,7 +160,8 @@ export default class ModalSelector extends BaseComponent {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>);
+            </View>
+        );
     }
 
     renderChildren() {
@@ -168,9 +179,9 @@ export default class ModalSelector extends BaseComponent {
     render() {
 
         const dp = (
-          <Modal transparent={true} ref="modal" visible={this.state.modalVisible} onRequestClose={this.close} animationType={this.state.animationType}>
-          {this.renderOptionList()}
-          </Modal>
+            <Modal transparent={true} ref="modal" visible={this.state.modalVisible} onRequestClose={this.close} animationType={this.state.animationType}>
+                {this.renderOptionList()}
+            </Modal>
         );
 
         return (
