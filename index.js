@@ -73,7 +73,7 @@ export default class ModalSelector extends BaseComponent {
             animationType: 'slide',
             modalVisible: false,
             transparent: false,
-            selected: 'please select',
+            selected: '',
             height: 0,
         };
     }
@@ -82,6 +82,7 @@ export default class ModalSelector extends BaseComponent {
         this.setState({selected: this.props.initValue, cancelText: this.props.cancelText});
     }
 
+    // TODO: If items updated reset this.state.height to 0
     componentWillReceiveProps(nextProps) {
         if (nextProps.initValue != this.props.initValue) {
             this.setState({selected: nextProps.initValue});
@@ -115,7 +116,11 @@ export default class ModalSelector extends BaseComponent {
     }
 
     setRenderHeight(event) {
-        var height = event.nativeEvent.layout.height
+        if(this.state.height !== 0) {
+            return;
+        }
+
+        var height = Math.ceil(event.nativeEvent.layout.height);
 
         if(this.state.height !== height) {
             this.setState({height: height});
